@@ -1,45 +1,49 @@
-// lib/useSpeechSynthesis.ts
-import { useState, useEffect, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 
-export const useSpeechSynthesis = () => {
-  const [speaking, setSpeaking] = useState(false)
-  const [textQueue, setTextQueue] = useState<string[]>([])
-  const synth = window.speechSynthesis
-
-  const speak = useCallback(
-    (text: string, lang: string = 'en-US') => {
-      if (synth.speaking || speaking) {
-        setTextQueue(prevQueue => [...prevQueue, text])
-        return
-      }
-
-      const utterThis = new SpeechSynthesisUtterance(text)
-      utterThis.onend = () => {
-        setSpeaking(false)
-        if (textQueue.length > 0) {
-          const nextText = textQueue.shift()
-          if (nextText) speak(nextText)
-        }
-      }
-
-      utterThis.onerror = event => {
-        setSpeaking(false)
-        console.error('SpeechSynthesisUtterance.onerror', event)
-      }
-
-      utterThis.lang = lang
-      synth.speak(utterThis)
-      setSpeaking(true)
-    },
-    [speaking, textQueue]
-  )
+const useSpeechSynthesis = (
+  text: string,
+  delay: number = 1000,
+  lang: string = 'fr-FR'
+) => {
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [debouncedText, setDebouncedText] = useState(text)
 
   useEffect(() => {
-    if (!synth.speaking && textQueue.length > 0) {
-      const nextText = textQueue.shift()
-      if (nextText) speak(nextText)
-    }
-  }, [speak, textQueue])
+    const handler = setTimeout(() => {
+      setDebouncedText(text)
+    }, delay)
 
-  return { speak, speaking }
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [text, delay])
+
+  useEffect(() => {
+    if (!debouncedText) return
+
+    const utter = new SpeechSynthesisUtterance(debouncedText)
+    utter.lang = lang
+    utter.onstart = () => setIsSpeaking(true)
+    utter.onend = () => setIsSpeaking(false)
+
+    const voices = window.speechSynthesis.getVoices()
+    const selectedVoice =
+      voices.find(voice => voice.name === 'Daniel (French (France))') ||
+      voices[0]
+    console.log('selectedVoice', selectedVoice)
+    if (selectedVoice) {
+      utter.voice = selectedVoice
+    }
+
+    window.speechSynthesis.speak(utter)
+
+    // Cleanup function to stop speech synthesis
+    return () => {
+      window.speechSynthesis.cancel()
+    }
+  }, [debouncedText, lang])
+
+  return { isSpeaking }
 }
+
+export default useSpeechSynthesis

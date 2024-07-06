@@ -476,10 +476,10 @@ async function submitUserMessage(content: string) {
       }
     }
   })
-
   return {
     id: nanoid(),
     display: result.value
+
   }
 }
 
@@ -507,7 +507,6 @@ export const AI = createAI<AIState, UIState>({
 
     if (session && session.user) {
       const aiState = getAIState()
-
       if (aiState) {
         const uiState = getUIStateFromAIState(aiState)
         return uiState
@@ -581,7 +580,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
         ) : message.role === 'user' ? (
           <UserMessage>{message.content as string}</UserMessage>
         ) : message.role === 'assistant' &&
-          typeof message.content === 'string' ? (
+              typeof message.content === 'string' ? (
           <BotMessage content={message.content} />
         ) : null
     }))

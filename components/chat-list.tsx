@@ -3,6 +3,7 @@ import { UIState } from '@/lib/chat/actions'
 import { Session } from '@/lib/types'
 import Link from 'next/link'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import useSpeechSynthesis from '@/lib/useSpeechSynthesis'
 
 export interface ChatList {
   messages: UIState
@@ -14,7 +15,7 @@ export function ChatList({ messages, session, isShared }: ChatList) {
   if (!messages.length) {
     return null
   }
-
+  
   return (
     <div className="relative mx-auto max-w-2xl px-4">
       {!isShared && !session ? (

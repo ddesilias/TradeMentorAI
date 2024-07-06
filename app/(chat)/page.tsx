@@ -13,10 +13,11 @@ export default async function IndexPage() {
   const id = nanoid()
   const session = (await auth()) as Session
   const missingKeys = await getMissingKeys()
-
   return (
-    <AI initialAIState={{ chatId: id, messages: [] }}>
-      <Chat id={id} session={session} missingKeys={missingKeys} />
-    </AI>
+    <>
+      <AI initialAIState={{ chatId: id, messages: [] }}>
+        <Chat id={id} session={session} missingKeys={missingKeys} />
+      </AI>
+    </>
   )
 }
