@@ -1,7 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+#video-wrapper {
+  background: url('/bg.png') no-repeat top center;
+  height: 500px;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
