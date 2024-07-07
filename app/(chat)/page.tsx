@@ -4,6 +4,7 @@ import { AI } from '@/lib/chat/actions'
 import { auth } from '@/auth'
 import { Session } from '@/lib/types'
 import { getMissingKeys } from '@/app/actions'
+import LiveTextToSpeech from '@/components/live-text-to-speech'
 
 export const metadata = {
   title: 'Next.js AI Chatbot'
