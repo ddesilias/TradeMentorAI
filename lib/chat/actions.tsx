@@ -156,7 +156,6 @@ async function submitUserMessage(content: string) {
         textStream = createStreamableValue('')
         textNode = <BotMessage content={textStream.value} />
       }
-
       if (done) {
         textStream.done()
         aiState.done({

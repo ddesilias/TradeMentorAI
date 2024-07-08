@@ -17,6 +17,9 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import useSpeechRecognition from '../lib/hooks/use-speech-reconition'
+import useMicrophonePermissions from '../lib/hooks/use-microphone-permissions'
 
 export function PromptForm({
   input,
@@ -30,6 +33,27 @@ export function PromptForm({
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
+   const { transcript, isListening, startListening, stopListening, error } =
+     useSpeechRecognition()
+   const { permissionState, requestPermission } = useMicrophonePermissions()
+  const [messages_voice, setMessages_voice] = useState<string[]>([])
+  
+    useEffect(() => {
+      if (permissionState === 'granted' && !isListening) {
+        startListening()
+      }
+    }, [permissionState, isListening, startListening])
+
+    useEffect(() => {
+      if (!isListening && transcript) {
+        handleSendMessage(transcript)
+      }
+    }, [isListening, transcript])
+
+    const handleSendMessage = (message: string) => {
+      setMessages_voice([...messages_voice, message])
+      // Envoyer le message au chatbot et récupérer la réponse
+    }
 
   React.useEffect(() => {
     if (inputRef.current) {
@@ -37,6 +61,16 @@ export function PromptForm({
     }
   }, [])
 
+  if (permissionState === 'denied') {
+    return (
+      <div className="p-4">
+        <p className="text-red-500">
+          L&apos;accès au microphone a été refusé. Veuillez accorder
+          l&apos;accès dans les paramètres de votre navigateur.
+        </p>
+      </div>
+    )
+  }
   return (
     <form
       ref={formRef}
@@ -109,6 +143,42 @@ export function PromptForm({
             <TooltipContent>Send message</TooltipContent>
           </Tooltip>
         </div>
+      </div>
+      <div className="p-4">
+        {permissionState === 'prompt' && (
+          <div className="mb-4">
+            <button
+              onClick={requestPermission}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Autoriser l&apos;accès au microphone
+            </button>
+          </div>
+        )}
+        {permissionState === 'granted' && (
+          <>
+            <div className="mb-4">
+              <button
+                onClick={isListening ? stopListening : startListening}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                {isListening ? 'Arrêter' : 'Parler'}
+              </button>
+              {error && <p className="text-red-500">{error}</p>}
+            </div>
+            <div className="bg-gray-100 p-4 rounded-lg shadow-lg">
+              {messages_voice.map((msg, index) => (
+                <p key={index} className="mb-2">
+                  {msg}
+                </p>
+              ))}
+            </div>
+            <div className="mt-4">
+              <h3>Transcript en temps réel:</h3>
+              <p>{transcript}</p>
+            </div>
+          </>
+        )}
       </div>
     </form>
   )

@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { StreamableValue, useStreamableValue } from 'ai/rsc'
 import { useStreamableText } from '@/lib/hooks/use-streamable-text'
-import useSpeechSynthesis from '@/lib/useSpeechSynthesis'
+import useSpeechSynthesis from '@/lib/hooks/use-speech-synthesis'
 
 // Different types of message bubbles.
 
