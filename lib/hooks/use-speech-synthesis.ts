@@ -30,7 +30,6 @@ const useSpeechSynthesis = (
     const selectedVoice =
       voices.find(voice => voice.name === 'Daniel (French (France))') ||
       voices[0]
-    console.log('selectedVoice', selectedVoice)
     if (selectedVoice) {
       utter.voice = selectedVoice
     }

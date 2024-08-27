@@ -15,7 +15,7 @@ import { SidebarMobile } from './sidebar-mobile'
 import { SidebarToggle } from './sidebar-toggle'
 import { ChatHistory } from './chat-history'
 import { Session } from '@/lib/types'
-
+import MainNav from './main-nav'
 async function UserOrLogin() {
   const session = (await auth()) as Session
   return (
@@ -36,7 +36,10 @@ async function UserOrLogin() {
       <div className="flex items-center">
         <IconSeparator className="size-6 text-muted-foreground/50" />
         {session?.user ? (
-          <UserMenu user={session.user} />
+          <>
+            <UserMenu user={session.user} />
+            <MainNav />
+          </>
         ) : (
           <Button variant="link" asChild className="-ml-2">
             <Link href="/login">Login</Link>

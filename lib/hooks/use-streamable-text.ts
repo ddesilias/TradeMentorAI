@@ -1,5 +1,6 @@
 import { StreamableValue, readStreamableValue } from 'ai/rsc'
 import { useEffect, useState } from 'react'
+import useSpeechSynthesis from './use-speech-synthesis'
 
 export const useStreamableText = (
   content: string | StreamableValue<string>
@@ -16,10 +17,12 @@ export const useStreamableText = (
           if (typeof delta === 'string') {
             setRawContent((value = value + delta))
           }
+          
         }
+        
       }
     })()
   }, [content])
-
+  
   return rawContent
 }

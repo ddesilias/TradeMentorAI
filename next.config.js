@@ -1,5 +1,18 @@
 /** @type {import('next').NextConfig} */
+
 module.exports = {
+  reactStrictMode: true,
+  experimental: {
+    runtime: "experimental-edge"
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://api.heygen.com/v1/:path*'
+      }
+    ]
+  },    
   images: {
     remotePatterns: [
       {
