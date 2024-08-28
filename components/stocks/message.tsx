@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { StreamableValue, useStreamableValue } from 'ai/rsc'
 import { useStreamableText } from '@/lib/hooks/use-streamable-text'
-import useSpeechSynthesis from '@/lib/hooks/use-speech-synthesis'
+
 
 // Different types of message bubbles.
 
@@ -34,7 +34,6 @@ export function BotMessage({
   className?: string
 }) {
   const text = useStreamableText(content)
-  useSpeechSynthesis(text)
   return (
     <div className={cn('group relative flex items-start md:-ml-12', className)}>
       <div className="flex size-[24px] shrink-0 select-none items-center justify-center rounded-md border bg-primary text-primary-foreground shadow-sm">

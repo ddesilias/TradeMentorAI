@@ -1,11 +1,15 @@
 /** @type {import('tailwindcss').Config} */
+const avatarConfig = require('./lib/avatar/tailwind.config')
+
 module.exports = {
   darkMode: ['class'],
+...avatarConfig,
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}'
+    './src/**/*.{ts,tsx}',
+    './lib/avatar/**/*.{js,ts,jsx,tsx}'
   ],
   prefix: '',
   theme: {

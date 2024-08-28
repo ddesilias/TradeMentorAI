@@ -35,7 +35,7 @@ import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { auth } from '@/auth'
-
+import useSpeechSynthesis from '@/lib/hooks/use-speech-synthesis'
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
 
@@ -153,7 +153,9 @@ async function submitUserMessage(content: string) {
     ],
     text: ({ content, done, delta }) => {
       if (!textStream) {
+       
         textStream = createStreamableValue('')
+        
         textNode = <BotMessage content={textStream.value} />
       }
       if (done) {
